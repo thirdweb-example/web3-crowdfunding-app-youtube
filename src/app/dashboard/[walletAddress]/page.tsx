@@ -1,5 +1,6 @@
 'use client';
 import { client } from "@/app/client";
+import { CROWDFUNDING_FACTORY } from "@/app/constants/contracts";
 import { MyCampaignCard } from "@/components/MyCampaignCard";
 import { useState } from "react";
 import { getContract } from "thirdweb";
@@ -15,18 +16,18 @@ export default function DashboardPage() {
     const contract = getContract({
         client: client,
         chain: baseSepolia,
-        address: "0x0Db0C14e714c66D7a5E6647Beda888D0E6a6081A",
+        address: CROWDFUNDING_FACTORY,
     });
 
     // Get Campaigns
     const { data: myCampaigns, isLoading: isLoadingMyCampaigns, refetch } = useReadContract({
         contract: contract,
-        method: "function getUserCampaigns(address _user) external view returns (address[] memory)",
+        method: "function getUserCampaigns(address _user) view returns ((address campaignAddress, address owner, string name, uint256 creationTime)[])",
         params: [account?.address as string]
     });
     
     return (
-        <div className="mx-auto max-w-7xl px-4 mt-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 mt-16 sm:px-6 lg:px-8">
             <div className="flex flex-row justify-between items-center mb-8">
                 <p className="text-4xl font-semibold">Dashboard</p>
                 <button
@@ -41,7 +42,7 @@ export default function DashboardPage() {
                         myCampaigns.map((campaign, index) => (
                             <MyCampaignCard
                                 key={index}
-                                contractAddress={campaign}
+                                contractAddress={campaign.campaignAddress}
                             />
                         ))
                     ) : (
@@ -71,7 +72,9 @@ const CreateCampaignModal = (
     const account = useActiveAccount();
     const [isDeployingContract, setIsDeployingContract] = useState<boolean>(false);
     const [campaignName, setCampaignName] = useState<string>("");
-    const [campaignGoal, setCampaignGoal] = useState<number>(0);
+    const [campaignDescription, setCampaignDescription] = useState<string>("");
+    const [campaignGoal, setCampaignGoal] = useState<number>(1);
+    const [campaignDeadline, setCampaignDeadline] = useState<number>(1);
     
     // Deploy contract from CrowdfundingFactory
     const handleDeployContract = async () => {
@@ -85,23 +88,42 @@ const CreateCampaignModal = (
                 contractId: "Crowdfunding",
                 contractParams: [
                     campaignName,
+                    campaignDescription,
                     campaignGoal,
+                    campaignDeadline
                 ],
-                publisher: "0xEe29620D0c544F00385032dfCd3Da3f99Affb8B2"
+                publisher: "0xEe29620D0c544F00385032dfCd3Da3f99Affb8B2",
+                version: "1.0.6",
             });
+            alert("Contract deployed successfully!");
         } catch (error) {
             console.error(error);
         } finally {
-            alert("Contract deployed successfully!");
             setIsDeployingContract(false);
             setIsModalOpen(false);
             refetch
         }
     };
 
+    const handleCampaignGoal = (value: number) => {
+        if (value < 1) {
+            setCampaignGoal(1);
+        } else {
+            setCampaignGoal(value);
+        }
+    }
+
+    const handleCampaignLengthhange = (value: number) => {
+        if (value < 1) {
+            setCampaignDeadline(1);
+        } else {
+            setCampaignDeadline(value);
+        }
+    }
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center backdrop-blur-md">
-            <div className="w-1/4 bg-slate-900 p-6 rounded-md">
+            <div className="w-1/2 bg-slate-100 p-6 rounded-md">
                 <div className="flex justify-between items-center mb-4">
                     <p className="text-lg font-semibold">Create a Campaign</p>
                     <button
@@ -116,21 +138,39 @@ const CreateCampaignModal = (
                         value={campaignName}
                         onChange={(e) => setCampaignName(e.target.value)}
                         placeholder="Campaign Name"
-                        className="mb-4 px-4 py-2 bg-slate-800 text-white rounded-md"
+                        className="mb-4 px-4 py-2 bg-slate-300 rounded-md"
                     />
+                    <label>Campaign Description:</label>
+                    <textarea
+                        value={campaignDescription}
+                        onChange={(e) => setCampaignDescription(e.target.value)}
+                        placeholder="Campaign Description"
+                        className="mb-4 px-4 py-2 bg-slate-300 rounded-md"
+                    ></textarea>
                     <label>Campaign Goal:</label>
                     <input 
                         type="number"
                         value={campaignGoal}
-                        onChange={(e) => setCampaignGoal(parseInt(e.target.value))}
-                        className="mb-4 px-4 py-2 bg-slate-800 text-white rounded-md"
+                        onChange={(e) => handleCampaignGoal(parseInt(e.target.value))}
+                        className="mb-4 px-4 py-2 bg-slate-300 rounded-md"
                     />
+                    <label>{`Campaign Length (Days)`}</label>
+                    <div className="flex space-x-4">
+                        <input 
+                            type="number"
+                            value={campaignDeadline}
+                            onChange={(e) => handleCampaignLengthhange(parseInt(e.target.value))}
+                            className="mb-4 px-4 py-2 bg-slate-300 rounded-md"
+                        />
+                    </div>
+
                     <button
                         className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
                         onClick={handleDeployContract}
                     >{
                         isDeployingContract ? "Creating Campaign..." : "Create Campaign"
                     }</button>
+                    
                 </div>
             </div>
         </div>

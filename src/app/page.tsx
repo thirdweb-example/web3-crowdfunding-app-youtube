@@ -1,16 +1,17 @@
 'use client';
-import { useActiveAccount, useReadContract } from "thirdweb/react";
+import { useReadContract } from "thirdweb/react";
 import { client } from "./client";
 import { baseSepolia } from "thirdweb/chains";
 import { getContract } from "thirdweb";
 import { CampaignCard } from "@/components/CampaignCard";
+import { CROWDFUNDING_FACTORY } from "./constants/contracts";
 
 export default function Home() {
   // Get CrowdfundingFactory contract
   const contract = getContract({
     client: client,
     chain: baseSepolia,
-    address: "0x0Db0C14e714c66D7a5E6647Beda888D0E6a6081A",
+    address: CROWDFUNDING_FACTORY,
   });
 
   // Get all campaigns deployed with CrowdfundingFactory
@@ -21,15 +22,16 @@ export default function Home() {
   });
 
   return (
-    <main className="pb-10 min-h-[90vh] flex items-start justify-start container max-w-screen-lg mx-auto">
+    <main className="mx-auto max-w-7xl px-4 mt-4 sm:px-6 lg:px-8">
       <div className="py-10">
+        <h1 className="text-4xl font-bold mb-4">Campaigns:</h1>
         <div className="grid grid-cols-3 gap-4">
           {!isLoadingCampaigns && campaigns && (
             campaigns.length > 0 ? (
               campaigns.map((campaign) => (
                 <CampaignCard
                   key={campaign.campaignAddress}
-                  campaign={campaign}
+                  campaignAddress={campaign.campaignAddress}
                 />
               ))
             ) : (

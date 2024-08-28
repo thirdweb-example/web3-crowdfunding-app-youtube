@@ -17,15 +17,23 @@ export const MyCampaignCard: React.FC<MyCampaignCardProps> = ({ contractAddress 
 
     // Get Campaign Name
     const { data: name } = useReadContract({
-        contract: contract,
-        method: "function name() view returns (string)"
+        contract, 
+        method: "function name() view returns (string)", 
+        params: []
     });
 
+    const { data: description } = useReadContract({ 
+        contract, 
+        method: "function description() view returns (string)", 
+        params: [] 
+      });
+
     return (
-            <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{name}</h5>
-                
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">A description of the campaign can go here. Right now this is not data stored in the smart contract.</p>
+            <div className="flex flex-col justify-between max-w-sm p-6 bg-white border border-slate-200 rounded-lg shadow">
+                <div>
+                    <h5 className="mb-2 text-2xl font-bold tracking-tight">{name}</h5>
+                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{description}</p>
+                </div>
                 
                 <Link
                     href={`/campaign/${contractAddress}`}
