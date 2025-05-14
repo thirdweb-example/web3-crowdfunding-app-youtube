@@ -86,12 +86,12 @@ const CreateCampaignModal = (
                 chain: baseSepolia,
                 account: account!,
                 contractId: "Crowdfunding",
-                contractParams: [
-                    campaignName,
-                    campaignDescription,
-                    campaignGoal,
-                    campaignDeadline
-                ],
+                contractParams: {
+                    name: campaignName,
+                    description: campaignDescription,
+                    goal: campaignGoal,
+                    _durationInDays: campaign Deadline,
+                    },
                 publisher: "0xEe29620D0c544F00385032dfCd3Da3f99Affb8B2",
                 version: "1.0.6",
             });
