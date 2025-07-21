@@ -5,6 +5,7 @@
 
 Starter template to build an onchain react native app with [thirdweb](https://thirdweb.com/) and [next](https://nextjs.org/).
 
+
 ## Installation
 
 Install the template using [thirdweb create](https://portal.thirdweb.com/cli/create)

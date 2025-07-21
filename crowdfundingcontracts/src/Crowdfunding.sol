@@ -12,6 +12,7 @@ contract Crowdfunding {
     enum CampaignState { Active, Successful, Failed }
     CampaignState public state;
 
+
     struct Tier {
         string name;
         uint256 amount;

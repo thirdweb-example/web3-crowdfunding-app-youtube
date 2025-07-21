@@ -18,12 +18,15 @@ export default function CampaignPage() {
         chain: baseSepolia,
         address: campaignAddress as string,
     });
+     
+
 
     // Name of the campaign
     const { data: name, isLoading: isLoadingName } = useReadContract({
         contract: contract,
         method: "function name() view returns (string)",
         params: [],
+        
     });
 
     // Description of the campaign

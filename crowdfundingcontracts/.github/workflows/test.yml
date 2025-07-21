@@ -5,6 +5,7 @@ on: workflow_dispatch
 env:
   FOUNDRY_PROFILE: ci
 
+
 jobs:
   check:
     strategy:

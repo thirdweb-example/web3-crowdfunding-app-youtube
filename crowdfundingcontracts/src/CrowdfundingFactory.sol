@@ -14,6 +14,7 @@ contract CrowdfundingFactory {
         uint256 creationTime;
     }
 
+
     Campaign[] public campaigns;
     mapping(address => Campaign[]) public userCampaigns;
 

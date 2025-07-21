@@ -17,6 +17,7 @@ export default function DashboardPage() {
         client: client,
         chain: baseSepolia,
         address: CROWDFUNDING_FACTORY,
+        
     });
 
     // Get Campaigns

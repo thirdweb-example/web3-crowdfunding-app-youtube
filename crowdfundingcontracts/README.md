@@ -12,6 +12,7 @@ To add functionality to your contracts, you can use the `@thirdweb-dev/contracts
 
 ## Building the project
 
+
 After any changes to the contract, run:
 
 ```bash

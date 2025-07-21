@@ -8,6 +8,7 @@
   "dependencies": {
     "@thirdweb-dev/contracts": "^3"
   },
+  
   "scripts": {
     "build": "npx thirdweb@latest detect",
     "deploy": "npx thirdweb@latest deploy",
